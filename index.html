@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>房貸理財與資產規劃評估</title>
+    <!-- 引入 Google Fonts 提升質感 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #003366; /* 銀行專業深藍 */
+            --secondary-color: #4a90e2; /* 互動天藍 */
+            --bg-color: #f4f7f6; /* 舒適背景色 */
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --border-color: #e0e0e0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            padding: 30px 25px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 開頭引言美化 */
+        .intro-banner {
+            background: linear-gradient(135deg, #002244, #004488);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+            font-weight: 400;
+            line-height: 1.6;
+            box-shadow: 0 4px 15px rgba(0, 51, 102, 0.15);
+        }
+
+        /* 進度條 */
+        .progress-container {
+            margin-bottom: 30px;
+        }
+        .progress-bar-bg {
+            background-color: var(--border-color);
+            height: 6px;
+            border-radius: 3px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            height: 100%;
+            width: 20%;
+            transition: width 0.4s ease;
+        }
+        .step-indicator {
+            text-align: right;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        /* 表單步驟控制 */
+        .form-step {
+            display: none;
+        }
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        /* 舒適的選項按鈕 (Radio / Checkbox 轉鈕) */
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        /* 長選項清單：2 欄網格排列，減少垂直高度 */
+        .grid-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .grid-options .radio-label {
+            padding: 12px 10px;
+            font-size: 0.92rem;
+        }
+
+        .grid-options .radio-label input[type="radio"],
+        .grid-options .radio-label input[type="checkbox"] {
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 380px) {
+            .grid-options {
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
+
+        /* Step 4：本人 / 屋主 職收資料分區塊 */
+        .person-section {
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px 16px;
+            margin-bottom: 10px;
+        }
+        .person-section.self {
+            border-color: var(--secondary-color);
+            background-color: rgba(74, 144, 226, 0.04);
+        }
+        .person-section.owner {
+            border-color: #e6a23c;
+            background-color: rgba(230, 162, 60, 0.06);
+            margin-top: 24px;
+        }
+        .person-section-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .person-section.self .person-section-title {
+            color: var(--secondary-color);
+        }
+        .person-section.owner .person-section-title {
+            color: #e6a23c;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .radio-label:hover {
+            border-color: var(--secondary-color);
+            background-color: rgba(74, 144, 226, 0.03);
+        }
+
+        .radio-label input[type="radio"] {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+
+        /* 選中狀態 */
+        .radio-label.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(0, 51, 102, 0.04);
+            color: var(--primary-color);
+        }
+
+        /* 輸入框樣式 */
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+        .input-style {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .input-style:focus {
+            border-color: var(--primary-color);
+        }
+
+        /* 隱藏/動態顯示的欄位容器 */
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .checkbox-group .radio-label input[type="checkbox"] {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+
+        .checkbox-group .radio-label.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(0, 51, 102, 0.04);
+            color: var(--primary-color);
+        }
+
+        .conditional-field {
+            display: none;
+            margin-top: -10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid var(--secondary-color);
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 其他貸款卡片 */
+        .loan-card {
+            background: #f8f9fa;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-top: 12px;
+            position: relative;
+            animation: slideDown 0.3s ease;
+        }
+        .loan-card-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        .loan-card label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+        }
+        .loan-card-remove {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+        .loan-card-remove:hover { color: #e74c3c; }
+        .years-scale {
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .years-scale .radio-label {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            flex: none;
+        }
+        .add-loan-btn {
+            margin-top: 10px;
+            padding: 7px 16px;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.88rem;
+        }
+        .add-loan-btn:hover { opacity: 0.85; }
+
+        /* 按鈕區 */
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .btn-prev {
+            background-color: #e0e0e0;
+            color: #555;
+        }
+        .btn-prev:hover { background-color: #d5d5d5; }
+
+        .btn-next {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn-next:hover { background-color: #002244; }
+
+        /* 結果頁面與複製區 */
+        .result-box {
+            background-color: #f8f9fa;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            font-family: monospace, 'Noto Sans TC';
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin-bottom: 20px;
+            max-height: 250px;
+            overflow-y: auto;
+            color: #444;
+        }
+
+        .btn-copy {
+            background-color: #28a745;
+            color: white;
+            width: 100%;
+        }
+        .btn-copy:hover { background-color: #218838; }
+
+        .toast {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(50px);
+            background-color: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 引言 Banner -->
+    <div class="intro-banner" id="introBanner">
+        💡 <b>親愛的客戶您好：</b><br>
+        我們可以選擇較長 20-30 年期攤還，也可以選擇理財型房貸（有動用才繳息、只繳息、可隨借隨還）。請協助填寫以下初步規劃，以利為您精準量身打造最合適的房貸方案。
+    </div>
+
+    <!-- 進度條 -->
+    <div class="progress-container" id="progressContainer">
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+        <div class="step-indicator" id="stepIndicator">步驟 1 / 5</div>
+    </div>
+
+    <form id="questionnaireForm">
+        
+        <!-- STEP 1: 規劃與產權 -->
+        <div class="form-step active" data-step="1">
+            <h2>1. 您的理財規劃與產權</h2>
+            
+            <div class="input-group">
+                <label>目前規劃方向？</label>
+                <div class="radio-group">
+                    <label class="radio-label"><input type="radio" name="plan" value="長期投資" required> 長期投資</label>
+                    <label class="radio-label"><input type="radio" name="plan" value="短期運用"> 短期運用</label>
+                    <label class="radio-label"><input type="radio" name="plan" value="其他/不確定"> 其他 / 尚在評估</label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>房子是您本人所有嗎？<br><small style="font-weight:400; color:var(--text-muted);">※ 未保存登記之建物（含違建）、空地、農地等，恕無法辦理房貸，敬請留意。</small></label>
+                <div class="radio-group" id="ownershipGroup">
+                    <label class="radio-label"><input type="radio" name="ownership" value="本人所有" required> 本人所有</label>
+                    <label class="radio-label"><input type="radio" name="ownership" value="本人與他人共有"> 本人與他人共有</label>
+                    <label class="radio-label"><input type="radio" name="ownership" value="他人所有"> 他人所有，非我本人所有</label>
+                    <label class="radio-label"><input type="radio" name="ownership" value="他人共同持有"> 他人共同持有，非我本人所有</label>
+                </div>
+            </div>
+
+            <!-- 他人所有：單選 -->
+            <div class="conditional-field" id="ownerSingle">
+                <label style="margin-bottom:10px; display:block; font-weight:600;">請選擇產權人與您的關係（單選）：</label>
+                <div class="radio-group grid-options" id="ownerSingleGroup">
+                    <label class="radio-label"><input type="radio" name="ownerRelation" value="配偶"> 配偶</label>
+                    <label class="radio-label"><input type="radio" name="ownerRelation" value="父"> 父</label>
+                    <label class="radio-label"><input type="radio" name="ownerRelation" value="母"> 母</label>
+                    <label class="radio-label"><input type="radio" name="ownerRelation" value="兄"> 兄</label>
+                    <label class="radio-label"><input type="radio" name="ownerRelation" value="弟"> 弟</label>
+                    <label class="radio-label"><input type="radio" name="ownerRelation" value="姐"> 姐</label>
+                    <label class="radio-label"><input type="radio" name="ownerRelation" value="妹"> 妹</label>
+                    <label class="radio-label"><input type="radio" name="ownerRelation" value="子女"> 子女</label>
+                    <label class="radio-label"><input type="radio" name="ownerRelation" value="其他(請輸入)"> 其他（請輸入）</label>
+                </div>
+                <div id="ownerRelationOtherWrap" style="display:none; margin-top:10px;">
+                    <input type="text" name="ownerRelationOther" class="input-style" placeholder="請輸入關係">
+                </div>
+            </div>
+
+            <!-- 他人共同持有：至少一個以上 (checkbox) -->
+            <div class="conditional-field" id="ownerMultiRequired">
+                <label style="margin-bottom:10px; display:block; font-weight:600;">請選擇共同產權人與您的關係（可複選，至少選二個以上）：</label>
+                <div class="checkbox-group grid-options" id="ownerMultiRequiredGroup">
+                    <label class="radio-label"><input type="checkbox" name="ownerRelationMultiReq" value="配偶"> 配偶</label>
+                    <label class="radio-label"><input type="checkbox" name="ownerRelationMultiReq" value="父"> 父</label>
+                    <label class="radio-label"><input type="checkbox" name="ownerRelationMultiReq" value="母"> 母</label>
+                    <label class="radio-label"><input type="checkbox" name="ownerRelationMultiReq" value="兄"> 兄</label>
+                    <label class="radio-label"><input type="checkbox" name="ownerRelationMultiReq" value="弟"> 弟</label>
+                    <label class="radio-label"><input type="checkbox" name="ownerRelationMultiReq" value="姐"> 姐</label>
+                    <label class="radio-label"><input type="checkbox" name="ownerRelationMultiReq" value="妹"> 妹</label>
+                    <label class="radio-label"><input type="checkbox" name="ownerRelationMultiReq" value="子女"> 子女</label>
+                    <label class="radio-label"><input type="checkbox" name="ownerRelationMultiReq" value="其他(請輸入)"> 其他（請輸入）</label>
+                </div>
+                <div id="ownerRelationMultiReqOtherWrap" style="display:none; margin-top:10px;">
+                    <input type="text" name="ownerRelationMultiReqOther" class="input-style" placeholder="請輸入關係">
+                </div>
+            </div>
+
+            <!-- 本人與他人共有：單選或複選皆可 (checkbox) -->
+            <div class="conditional-field" id="ownerMultiOptional">
+                <label style="margin-bottom:10px; display:block; font-weight:600;">請選擇共有人與您的關係（可單選或複選）：</label>
+                <div class="checkbox-group grid-options" id="ownerMultiOptionalGroup">
+                    <label class="radio-label"><input type="checkbox" name="ownerRelationMultiOpt" value="配偶"> 配偶</label>
+                    <label class="radio-label"><input type="checkbox" name="ownerRelationMultiOpt" value="父"> 父</label>
+                    <label class="radio-label"><input type="checkbox" name="ownerRelationMultiOpt" value="母"> 母</label>
+                    <label class="radio-label"><input type="checkbox" name="ownerRelationMultiOpt" value="兄"> 兄</label>
+                    <label class="radio-label"><input type="checkbox" name="ownerRelationMultiOpt" value="弟"> 弟</label>
+                    <label class="radio-label"><input type="checkbox" name="ownerRelationMultiOpt" value="姐"> 姐</label>
+                    <label class="radio-label"><input type="checkbox" name="ownerRelationMultiOpt" value="妹"> 妹</label>
+                    <label class="radio-label"><input type="checkbox" name="ownerRelationMultiOpt" value="子女"> 子女</label>
+                    <label class="radio-label"><input type="checkbox" name="ownerRelationMultiOpt" value="其他(請輸入)"> 其他（請輸入）</label>
+                </div>
+                <div id="ownerRelationMultiOptOtherWrap" style="display:none; margin-top:10px;">
+                    <input type="text" name="ownerRelationMultiOptOther" class="input-style" placeholder="請輸入關係">
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: 房屋現況 -->
+        <div class="form-step" data-step="2">
+            <h2>2. 房屋型態與用途</h2>
+            
+            <div class="input-group">
+                <label>建築型態？</label>
+                <div class="radio-group">
+                    <label class="radio-label"><input type="radio" name="buildType" value="大樓華廈(有電梯)" required> 大樓華廈（有電梯）</label>
+                    <label class="radio-label"><input type="radio" name="buildType" value="公寓(無電梯)"> 公寓（無電梯）</label>
+                    <label class="radio-label"><input type="radio" name="buildType" value="透天"> 透天</label>
+                    <label class="radio-label"><input type="radio" name="buildType" value="多門牌(打通相連房屋)"> 多門牌（打通相連房屋）</label>
+                    <label class="radio-label"><input type="radio" name="buildType" value="套房(室內小於15坪)"> 套房（室內小於 15 坪）</label>
+                    <label class="radio-label"><input type="radio" name="buildType" value="其他"> 其他</label>
+                </div>
+            </div>
+
+            <!-- 建築型態「其他」子選項 -->
+            <div class="conditional-field" id="buildTypeOtherWrap">
+                <label style="margin-bottom:10px; display:block; font-weight:600;">請選擇建築類型（單選）：</label>
+                <div class="radio-group grid-options">
+                    <label class="radio-label"><input type="radio" name="buildTypeOther" value="辦公室"> 辦公室</label>
+                    <label class="radio-label"><input type="radio" name="buildTypeOther" value="農舍"> 農舍</label>
+                    <label class="radio-label"><input type="radio" name="buildTypeOther" value="工業住宅"> 工業住宅</label>
+                    <label class="radio-label"><input type="radio" name="buildTypeOther" value="地下室"> 地下室</label>
+                    <label class="radio-label"><input type="radio" name="buildTypeOther" value="室內分隔多間套房"> 室內分隔多間套房</label>
+                    <label class="radio-label"><input type="radio" name="buildTypeOther" value="其他(請輸入)"> 其他（請輸入）</label>
+                </div>
+                <div id="buildTypeOtherInputWrap" style="display:none; margin-top:10px;">
+                    <input type="text" name="buildTypeOtherText" class="input-style" placeholder="請輸入建築類型">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>目前房屋用途？</label>
+                <div class="radio-group">
+                    <label class="radio-label"><input type="radio" name="usage" value="自住" required> 自住</label>
+                    <label class="radio-label"><input type="radio" name="usage" value="出租"> 出租</label>
+                    <label class="radio-label"><input type="radio" name="usage" value="空屋/其他"> 空屋 / 其他</label>
+                </div>
+            </div>
+
+            <!-- 自住：子選項 -->
+            <div class="conditional-field" id="usageSelfLive">
+                <label style="margin-bottom:10px; display:block; font-weight:600;">本人持有狀況（單選）：</label>
+                <div class="radio-group">
+                    <label class="radio-label"><input type="radio" name="selfLiveStatusSelf" value="本人僅有這間房"> 本人僅有這間房</label>
+                    <label class="radio-label"><input type="radio" name="selfLiveStatusSelf" value="本人還有別間房、這間較早取得"> 本人還有別間房、這間較早取得</label>
+                    <label class="radio-label"><input type="radio" name="selfLiveStatusSelf" value="本人還有別間房、這間較晚取得"> 本人還有別間房、這間較晚取得</label>
+                </div>
+                <div id="usageSelfLiveOwner" style="display:none; margin-top:14px;">
+                    <label style="margin-bottom:10px; display:block; font-weight:600;">屋主持有狀況（單選）：</label>
+                    <div class="radio-group">
+                        <label class="radio-label"><input type="radio" name="selfLiveStatusOwner" value="屋主僅有這間房"> 屋主僅有這間房</label>
+                        <label class="radio-label"><input type="radio" name="selfLiveStatusOwner" value="屋主還有別間房、這間較早取得"> 屋主還有別間房、這間較早取得</label>
+                        <label class="radio-label"><input type="radio" name="selfLiveStatusOwner" value="屋主還有別間房、這間較晚取得"> 屋主還有別間房、這間較晚取得</label>
+                    </div>
+
+                    <div id="usageSelfStatusOtherOwner" style="display:none; margin-top:14px;">
+                        <label style="margin-bottom:10px; display:block; font-weight:600;">本人持有狀況（單選）：</label>
+                        <div class="radio-group">
+                            <label class="radio-label"><input type="radio" name="selfStatusWhenOtherOwner" value="本人有別間房且有房貸"> 本人有別間房且有房貸</label>
+                            <label class="radio-label"><input type="radio" name="selfStatusWhenOtherOwner" value="本人有別間房但無房貸"> 本人有別間房但無房貸</label>
+                            <label class="radio-label"><input type="radio" name="selfStatusWhenOtherOwner" value="本人名下沒有房"> 本人名下沒有房</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 出租：子選項 -->
+            <div class="conditional-field" id="usageRent">
+                <label style="margin-bottom:10px; display:block; font-weight:600;">出租狀況（可複選）：</label>
+                <div class="checkbox-group">
+                    <label class="radio-label"><input type="checkbox" name="rentStatus" value="出租為住家"> 出租為住家</label>
+                    <label class="radio-label"><input type="checkbox" name="rentStatus" value="出租商家營業"> 出租商家營業</label>
+                    <label class="radio-label"><input type="checkbox" name="rentStatus" value="包租代管"> 包租代管</label>
+                    <label class="radio-label"><input type="checkbox" name="rentStatus" value="有登載託租網站"> 有登載託租網站</label>
+                    <label class="radio-label"><input type="checkbox" name="rentStatus" value="有委託仲介賣或網路委賣"> 有委託仲介賣或網路委賣</label>
+                </div>
+                <div style="margin-top:14px;">
+                    <label style="display:block; font-weight:600; margin-bottom:6px;">租約到期日：</label>
+                    <input type="text" name="rentExpiry" class="input-style" placeholder="例如：民國 115 年 3 月">
+                </div>
+                <div style="margin-top:14px;">
+                    <label style="display:block; font-weight:600; margin-bottom:6px;">每月租金：</label>
+                    <input type="text" name="rentMonthly" class="input-style" placeholder="例如：28,000 元">
+                </div>
+            </div>
+
+            <!-- 空屋/其他：子選項 -->
+            <div class="conditional-field" id="usageVacant">
+                <label style="margin-bottom:10px; display:block; font-weight:600;">空屋狀況（可複選）：</label>
+                <div class="checkbox-group">
+                    <label class="radio-label"><input type="checkbox" name="vacantStatus" value="裝修中/空置中"> 裝修中 / 空置中</label>
+                    <label class="radio-label"><input type="checkbox" name="vacantStatus" value="有登載託租網站"> 有登載託租網站</label>
+                    <label class="radio-label"><input type="checkbox" name="vacantStatus" value="有委託仲介賣或網路委賣"> 有委託仲介賣或網路委賣</label>
+                </div>
+                <div style="margin-top:14px;">
+                    <label style="display:block; font-weight:600; margin-bottom:6px;">房屋取得日：</label>
+                    <input type="text" name="acquireDate" class="input-style" placeholder="民國年月，非買賣取得或已超過3年免填">
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 3: 貸款狀況 -->
+        <div class="form-step" data-step="3">
+            <h2>3. 現有貸款狀況</h2>
+            
+            <div class="input-group">
+                <label>目前這間房子還有貸款嗎？</label>
+                <div class="radio-group" id="loanTypeGroup">
+                    <label class="radio-label"><input type="radio" name="loanType" value="只有購屋貸款" required> 只有購屋貸款</label>
+                    <label class="radio-label"><input type="radio" name="loanType" value="無任何貸款"> 無任何貸款</label>
+                    <label class="radio-label"><input type="radio" name="loanType" value="還有購屋貸款、也有增貸過"> 還有購屋貸款、也有增貸過</label>
+                    <label class="radio-label"><input type="radio" name="loanType" value="沒有購屋貸款、但曾經有增貸"> 沒有購屋貸款、但曾經有增貸</label>
+                </div>
+            </div>
+
+            <!-- 只有購屋貸款 / 還有購屋貸款也有增貸 → 購屋貸款餘額 -->
+            <div class="conditional-field" id="houseLoanDetail">
+                <label>請填寫購屋貸款大概剩餘金額 (萬元)：</label>
+                <input type="text" name="houseLoanBalance" class="input-style" placeholder="例如：約 500 萬元">
+                <label style="margin-top:12px; display:block;">上次撥款大概已繳幾年：</label>
+                <div class="radio-group years-scale">
+                    <label class="radio-label"><input type="radio" name="houseLoanYears" value="未滿3個月"> 未滿3個月</label>
+                    <label class="radio-label"><input type="radio" name="houseLoanYears" value="未滿半年"> 未滿半年</label>
+                    <label class="radio-label"><input type="radio" name="houseLoanYears" value="已滿一年"> 已滿一年</label>
+                    <label class="radio-label"><input type="radio" name="houseLoanYears" value="已滿二年"> 已滿二年</label>
+                    <label class="radio-label"><input type="radio" name="houseLoanYears" value="三年以上"> 三年以上</label>
+                    <label class="radio-label"><input type="radio" name="houseLoanYears" value="五年以上"> 五年以上</label>
+                </div>
+            </div>
+
+            <!-- 沒有購屋貸款但曾增貸 / 還有購屋貸款也有增貸 → 非購屋貸款餘額 -->
+            <div class="conditional-field" id="extraLoanDetail">
+                <label>請填寫非購屋的貸款大概剩餘金額 (萬元)：</label>
+                <input type="text" name="extraLoanBalance" class="input-style" placeholder="例如：增貸 100 萬元">
+                <label style="margin-top:12px; display:block;">上次撥款大概已繳幾年：</label>
+                <div class="radio-group years-scale">
+                    <label class="radio-label"><input type="radio" name="extraLoanYears" value="未滿3個月"> 未滿3個月</label>
+                    <label class="radio-label"><input type="radio" name="extraLoanYears" value="未滿半年"> 未滿半年</label>
+                    <label class="radio-label"><input type="radio" name="extraLoanYears" value="已滿一年"> 已滿一年</label>
+                    <label class="radio-label"><input type="radio" name="extraLoanYears" value="已滿二年"> 已滿二年</label>
+                    <label class="radio-label"><input type="radio" name="extraLoanYears" value="三年以上"> 三年以上</label>
+                    <label class="radio-label"><input type="radio" name="extraLoanYears" value="五年以上"> 五年以上</label>
+                </div>
+                <div id="loanYearsError" style="display:none; color:#e74c3c; font-size:0.85rem; margin-top:8px;">
+                    ⚠ 非購屋貸款已繳款年期不可大於購屋貸款已繳款年期，請重新選擇
+                </div>
+            </div>
+
+            <!-- 其他貸款 -->
+            <div class="input-group" style="margin-top:20px;">
+                <label>您是否有其他貸款</label>
+                <div class="checkbox-group grid-options">
+                    <label class="radio-label"><input type="checkbox" name="otherLoanTypes" value="購屋房貸(其他房屋)"> 購屋房貸（其他房屋）</label>
+                    <label class="radio-label"><input type="checkbox" name="otherLoanTypes" value="非購屋房貸增貸(其他房屋)"> 非購屋房貸增貸（其他房屋）</label>
+                    <label class="radio-label"><input type="checkbox" name="otherLoanTypes" value="車貸"> 車貸</label>
+                    <label class="radio-label"><input type="checkbox" name="otherLoanTypes" value="信貸"> 信貸</label>
+                    <label class="radio-label"><input type="checkbox" name="otherLoanTypes" value="學貸"> 學貸</label>
+                    <label class="radio-label"><input type="checkbox" name="otherLoanTypes" value="公司貸款"> 公司貸款</label>
+                </div>
+            </div>
+
+            <!-- 動態產生的其他貸款筆數區塊 -->
+            <div id="otherLoansContainer"></div>
+        </div>
+
+        <!-- STEP 4: 財務與職業 -->
+        <div class="form-step" data-step="4">
+            <h2>4. 職業與年收入評估</h2>
+
+            <div class="person-section self">
+                <div class="person-section-title">👤 本人職業與收入</div>
+                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:14px;">請填寫您本人的職業與收入概況。</p>
+
+                <div class="input-group">
+                    <label>您的職業類型？</label>
+                    <div class="radio-group">
+                        <label class="radio-label"><input type="radio" name="jobType" value="上班族" required> 一般上班族（有薪轉）</label>
+                        <label class="radio-label"><input type="radio" name="jobType" value="自己開公司/做生意(無營登)"> 自己開店 / 做生意（無營登）</label>
+                        <label class="radio-label"><input type="radio" name="jobType" value="公司負責人(有營登)"> 公司負責人（有營登）</label>
+                        <label class="radio-label"><input type="radio" name="jobType" value="自由業/其他"> 自由業 / 其他</label>
+                        <label class="radio-label"><input type="radio" name="jobType" value="家管/退休"> 家管 / 退休</label>
+                    </div>
+                </div>
+
+                <!-- 上班族 / 公司負責人 -->
+                <div class="conditional-field" id="jobDetailEmployee">
+                    <label id="jobDetailEmployeeLabel">現職公司 / 年資 / 職稱：<small style="font-weight:400; color:var(--text-muted);">（選填）</small></label>
+                    <input type="text" name="jobDetailEmployee" class="input-style" placeholder="例如：XX科技公司 / 3年 / 工程師">
+                </div>
+
+                <!-- 無營登 / 自由業其他 -->
+                <div class="conditional-field" id="jobDetailSelfEmployed">
+                    <label>對外營業店名/營業項目 / 月均常態收入：<small style="font-weight:400; color:var(--text-muted);">（選填）</small></label>
+                    <input type="text" name="jobDetailSelfEmployed" class="input-style" placeholder="例如：OO小吃店 / 餐飲業 / 月均約 8 萬元">
+                </div>
+
+                <!-- 家管/退休 -->
+                <div class="conditional-field" id="jobDetailRetired">
+                    <label>月均常態收入：<small style="font-weight:400; color:var(--text-muted);">（選填）</small></label>
+                    <input type="text" name="jobDetailRetired" class="input-style" placeholder="例如：月均約 3 萬元（含退休金）">
+                </div>
+
+                <div class="input-group">
+                    <label>個人或主要家戶年收入大概？</label>
+                    <input type="text" name="annualIncome" class="input-style" placeholder="例如：約 80 萬 或 150 萬元" required>
+                </div>
+
+                <div class="input-group" style="margin-bottom:0;">
+                    <label>您的年齡：<small style="font-weight:400; color:var(--text-muted);">（選填）</small></label>
+                    <input type="text" name="age" class="input-style" placeholder="45歲以內免填">
+                </div>
+            </div>
+
+            <!-- 補充屋主職收資料：當產權人非本人時顯示 -->
+            <div class="person-section owner" id="ownerJobSection" style="display:none;">
+                <div class="person-section-title">🏠 屋主職業與收入（補充資料）</div>
+                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:14px;">
+                    因房屋產權人非本人所有，請協助填寫屋主（<span id="ownerRelationListText">屋主</span>）的職業與收入概況，以利後續評估。
+                </p>
+
+                <div class="input-group">
+                    <label>屋主的職業類型？</label>
+                    <div class="radio-group">
+                        <label class="radio-label"><input type="radio" name="ownerJobType" value="上班族"> 一般上班族（有薪轉）</label>
+                        <label class="radio-label"><input type="radio" name="ownerJobType" value="自己開公司/做生意(無營登)"> 自己開店 / 做生意（無營登）</label>
+                        <label class="radio-label"><input type="radio" name="ownerJobType" value="公司負責人(有營登)"> 公司負責人（有營登）</label>
+                        <label class="radio-label"><input type="radio" name="ownerJobType" value="自由業/其他"> 自由業 / 其他</label>
+                        <label class="radio-label"><input type="radio" name="ownerJobType" value="家管/退休"> 家管 / 退休</label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>屋主現職公司 / 年資 / 職稱：<small style="font-weight:400; color:var(--text-muted);">（選填）</small></label>
+                    <input type="text" name="ownerJobDetail" class="input-style" placeholder="例如：XX科技公司 / 5年 / 經理">
+                </div>
+
+                <div class="input-group">
+                    <label>屋主年齡：<small style="font-weight:400; color:var(--text-muted);">（選填）</small></label>
+                    <input type="text" name="ownerAge" class="input-style" placeholder="45歲以內免填">
+                </div>
+
+                <div class="input-group" style="margin-bottom:0;">
+                    <label>屋主年收入估計：<small style="font-weight:400; color:var(--text-muted);">（選填）</small></label>
+                    <input type="text" name="ownerAnnualIncome" class="input-style" placeholder="例如：約 80 萬 或 150 萬元">
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 5: 本地資訊與介紹人 -->
+        <div class="form-step" data-step="5">
+            <h2>5. 估價地址與介紹人</h2>
+            
+            <div class="input-group">
+                <label>房屋門牌在哪邊呢？(可寫OO路與XX路口、或OO社區X棟O樓)</label>
+                <input type="text" name="address" class="input-style" placeholder="例如：台南市東區XX路XX號 (可不填寫門牌號碼以保隱私)" required>
+            </div>
+
+            <div class="input-group">
+                <label>請問是哪一位介紹的呢？(介紹人姓名)</label>
+                <input type="text" name="referrer" class="input-style" placeholder="例如：王小明，若無請填「無」" required>
+            </div>
+        </div>
+
+        <!-- RESULT STEP: 成功生成畫面 -->
+        <div class="form-step" id="resultStep">
+            <h2 style="color: #28a745; text-align: center;">🎉 評估資料已成功產生！</h2>
+            <p style="font-size:0.9rem; color:var(--text-muted); text-align:center; margin-bottom:20px;">請點擊下方按鈕複製內容，並直接貼上 LINE 傳送給您的專員。</p>
+            
+            <div class="result-box" id="resultSummary"></div>
+
+            <div id="ownerNoticeBox" style="display:none; margin-top:16px; padding:16px 18px; border:2px solid #e74c3c; border-radius:10px; background:#fdecea;">
+                <p style="color:#e74c3c; font-weight:700; margin:0 0 10px 0; line-height:1.6;" id="ownerNoticeText"></p>
+                <div style="color:#e74c3c; font-weight:700; line-height:1.6;" id="ownerJobSummaryText"></div>
+            </div>
+
+            <button type="button" class="btn btn-copy" onclick="copyToClipboard()">📋 一鍵複製完整回答</button>
+        </div>
+
+        <!-- 按鈕控制區 -->
+        <div class="btn-container" id="btnContainer">
+            <button type="button" class="btn btn-prev" id="prevBtn" style="visibility: hidden;">上一步</button>
+            <button type="button" class="btn btn-next" id="nextBtn">下一步</button>
+        </div>
+    </form>
+</div>
+
+<div class="toast" id="toast">已複製到剪貼簿！</div>
+
+<script>
+    let currentStep = 1;
+    const totalSteps = 5;
+
+    // 給點擊整行 Label 加上特殊選中樣式
+    document.querySelectorAll('.radio-label').forEach(label => {
+        label.addEventListener('click', function() {
+            const input = this.querySelector('input[type="radio"], input[type="checkbox"]');
+            if (!input) return;
+            const name = input.name;
+            document.querySelectorAll(`input[name="${name}"]`).forEach(inp => {
+                const lbl = inp.closest('.radio-label');
+                if (lbl) lbl.classList.remove('selected');
+            });
+            if (input.checked) {
+                this.classList.add('selected');
+            }
+        });
+    });
+
+    // 職業類型：動態顯示對應補充欄位
+    const jobDetailMap = {
+        '上班族':               'jobDetailEmployee',
+        '公司負責人(有營登)':    'jobDetailEmployee',
+        '自己開公司/做生意(無營登)': 'jobDetailSelfEmployed',
+        '自由業/其他':           'jobDetailSelfEmployed',
+        '家管/退休':             'jobDetailRetired',
+    };
+    const employeeLabelMap = {
+        '上班族': '現職公司 / 年資 / 職稱：',
+        '公司負責人(有營登)': '現職公司 / 年資：',
+    };
+    const allJobDetailIds = ['jobDetailEmployee', 'jobDetailSelfEmployed', 'jobDetailRetired'];
+
+    document.querySelectorAll('input[name="jobType"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            allJobDetailIds.forEach(id => {
+                const el = document.getElementById(id);
+                el.style.display = 'none';
+                el.querySelector('input').value = '';
+            });
+            const targetId = jobDetailMap[this.value];
+            if (targetId) document.getElementById(targetId).style.display = 'block';
+
+            // 動態更新 jobDetailEmployee 的標籤文字
+            if (employeeLabelMap[this.value]) {
+                const labelEl = document.getElementById('jobDetailEmployeeLabel');
+                labelEl.innerHTML = `${employeeLabelMap[this.value]}<small style="font-weight:400; color:var(--text-muted);">（選填）</small>`;
+            }
+        });
+    });
+
+    // 建築型態「其他」子選項切換
+    document.querySelectorAll('input[name="buildType"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const wrap = document.getElementById('buildTypeOtherWrap');
+            const inputWrap = document.getElementById('buildTypeOtherInputWrap');
+            const textInput = inputWrap.querySelector('input');
+            if (this.value === '其他') {
+                wrap.style.display = 'block';
+            } else {
+                wrap.style.display = 'none';
+                document.querySelectorAll('input[name="buildTypeOther"]').forEach(i => safeResetInput(i));
+                inputWrap.style.display = 'none';
+                textInput.value = '';
+            }
+        });
+    });
+
+    document.querySelectorAll('input[name="buildTypeOther"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const inputWrap = document.getElementById('buildTypeOtherInputWrap');
+            const textInput = inputWrap.querySelector('input');
+            if (this.value === '其他(請輸入)') {
+                inputWrap.style.display = 'block';
+            } else {
+                inputWrap.style.display = 'none';
+                textInput.value = '';
+            }
+        });
+    });
+
+    // 安全重置 input 的選中狀態（input 若不在 .radio-label 內則略過）
+    function safeResetInput(i) {
+        i.checked = false;
+        const lbl = i.closest('.radio-label');
+        if (lbl) {
+            lbl.classList.remove('selected');
+            lbl.style.borderColor = 'var(--border-color)';
+        }
+    }
+
+    // 判斷產權類型
+    function getOwnershipVal() {
+        return document.querySelector('input[name="ownership"]:checked')?.value || '';
+    }
+
+    // 將「其他(請輸入)」replace 為實際輸入文字
+    function resolveRelation(val, otherVal) {
+        return val === '其他(請輸入)' ? (otherVal || '其他') : val;
+    }
+
+    // 取得依產權類型整理出的關係人清單（陣列）
+    function getOwnerRelationList() {
+        const ownershipVal = getOwnershipVal();
+        if (ownershipVal === '他人所有') {
+            const rel = resolveRelation(
+                document.querySelector('input[name="ownerRelation"]:checked')?.value || '',
+                document.querySelector('input[name="ownerRelationOther"]')?.value || ''
+            );
+            return rel ? [rel] : [];
+        } else if (ownershipVal === '他人共同持有') {
+            return Array.from(document.querySelectorAll('input[name="ownerRelationMultiReq"]:checked'))
+                .map(i => resolveRelation(i.value, document.querySelector('input[name="ownerRelationMultiReqOther"]')?.value || ''));
+        } else if (ownershipVal === '本人與他人共有') {
+            return Array.from(document.querySelectorAll('input[name="ownerRelationMultiOpt"]:checked'))
+                .map(i => resolveRelation(i.value, document.querySelector('input[name="ownerRelationMultiOptOther"]')?.value || ''));
+        }
+        return [];
+    }
+
+    // 更新 Step 4「補充屋主職收資料」區塊的顯示與關係人文字
+    function refreshOwnerJobSection() {
+        const section = document.getElementById('ownerJobSection');
+        if (!section) return;
+        const ownershipVal = getOwnershipVal();
+        const isNonSelfOwner = ownershipVal && ownershipVal !== '本人所有';
+
+        if (isNonSelfOwner) {
+            section.style.display = 'block';
+            const list = getOwnerRelationList();
+            const textEl = document.getElementById('ownerRelationListText');
+            if (textEl) textEl.textContent = list.length > 0 ? list.join('、') : '屋主';
+        } else {
+            section.style.display = 'none';
+            // 清除已填寫的補充資料
+            section.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(i => safeResetInput(i));
+            section.querySelectorAll('input[type="text"]').forEach(i => i.value = '');
+        }
+    }
+
+    function refreshOwnerBlock() {
+        const ownerBlock = document.getElementById('usageSelfLiveOwner');
+        const selfBlock = document.querySelector('#usageSelfLive > .radio-group');
+        const selfLabel = document.querySelector('#usageSelfLive > label');
+        const extraBlock = document.getElementById('usageSelfStatusOtherOwner');
+        if (!ownerBlock) return;
+
+        const usageVal = document.querySelector('input[name="usage"]:checked')?.value;
+        const ownershipVal = getOwnershipVal();
+        const isOtherOwner = ownershipVal === '他人所有' || ownershipVal === '他人共同持有';
+        const isNonSelfOwner = ownershipVal && ownershipVal !== '本人所有';
+
+        function hideExtraBlock() {
+            if (!extraBlock) return;
+            extraBlock.style.display = 'none';
+            document.querySelectorAll('input[name="selfStatusWhenOtherOwner"]').forEach(i => {
+                safeResetInput(i);
+            });
+        }
+
+        if (usageVal === '自住') {
+            if (isOtherOwner) {
+                // 他人所有/他人共同持有：只顯示屋主欄位 + 本人持有狀況，隱藏本人欄位
+                if (selfBlock) selfBlock.style.display = 'none';
+                if (selfLabel) selfLabel.style.display = 'none';
+                // 清除本人選項
+                document.querySelectorAll('input[name="selfLiveStatusSelf"]').forEach(i => {
+                    safeResetInput(i);
+                });
+                ownerBlock.style.display = 'block';
+                if (extraBlock) extraBlock.style.display = 'block';
+            } else if (isNonSelfOwner) {
+                // 本人與他人共有：兩區都顯示，不顯示額外的本人持有狀況
+                if (selfBlock) selfBlock.style.display = '';
+                if (selfLabel) selfLabel.style.display = '';
+                ownerBlock.style.display = 'block';
+                hideExtraBlock();
+            } else {
+                // 本人所有：只顯示本人欄位
+                if (selfBlock) selfBlock.style.display = '';
+                if (selfLabel) selfLabel.style.display = '';
+                ownerBlock.style.display = 'none';
+                document.querySelectorAll('input[name="selfLiveStatusOwner"]').forEach(i => {
+                    safeResetInput(i);
+                });
+                hideExtraBlock();
+            }
+        } else {
+            // 非自住，隱藏屋主欄位，恢復本人欄位顯示狀態
+            if (selfBlock) selfBlock.style.display = '';
+            if (selfLabel) selfLabel.style.display = '';
+            ownerBlock.style.display = 'none';
+            document.querySelectorAll('input[name="selfLiveStatusOwner"]').forEach(i => {
+                safeResetInput(i);
+            });
+            hideExtraBlock();
+        }
+    }
+
+    // 用途選項：動態顯示對應子選項
+    document.querySelectorAll('input[name="usage"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const val = this.value;
+            const panels = {
+                '自住': 'usageSelfLive',
+                '出租': 'usageRent',
+                '空屋/其他': 'usageVacant'
+            };
+            Object.entries(panels).forEach(([key, id]) => {
+                const el = document.getElementById(id);
+                if (key === val) {
+                    el.style.display = 'block';
+                } else {
+                    el.style.display = 'none';
+                    el.querySelectorAll('input[type="checkbox"]').forEach(i => {
+                        safeResetInput(i);
+                    });
+                    el.querySelectorAll('input[type="radio"]').forEach(i => {
+                        safeResetInput(i);
+                    });
+                    el.querySelectorAll('input[type="text"]').forEach(i => i.value = '');
+                }
+            });
+            refreshOwnerBlock();
+        });
+    });
+
+    // 產權選項：動態顯示對應子選項
+    document.querySelectorAll('input[name="ownership"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const val = this.value;
+            const ownerSingle = document.getElementById('ownerSingle');
+            const ownerMultiRequired = document.getElementById('ownerMultiRequired');
+            const ownerMultiOptional = document.getElementById('ownerMultiOptional');
+
+            // 全部隱藏並清除
+            [ownerSingle, ownerMultiRequired, ownerMultiOptional].forEach(el => {
+                el.style.display = 'none';
+                el.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(i => {
+                    i.removeAttribute('required');
+                    safeResetInput(i);
+                });
+                el.querySelectorAll('input[type="text"]').forEach(i => i.value = '');
+                el.querySelectorAll('[id$="OtherWrap"], [id$="OtherWrap"]').forEach(w => w.style.display = 'none');
+            });
+
+            if (val === '他人所有') {
+                ownerSingle.style.display = 'block';
+                ownerSingle.querySelectorAll('input[type="radio"]').forEach(i => i.setAttribute('required', 'required'));
+            } else if (val === '他人共同持有') {
+                ownerMultiRequired.style.display = 'block';
+                // required 在驗證時手動判斷
+            } else if (val === '本人與他人共有') {
+                ownerMultiOptional.style.display = 'block';
+            }
+            refreshOwnerBlock();
+            refreshOwnerJobSection();
+        });
+    });
+
+    // Checkbox 選中視覺樣式
+    document.querySelectorAll('.checkbox-group .radio-label').forEach(label => {
+        label.addEventListener('click', function() {
+            const cb = this.querySelector('input[type="checkbox"]');
+            if (!cb) return;
+            if (cb.checked) {
+                this.classList.add('selected');
+            } else {
+                this.classList.remove('selected');
+            }
+        });
+    });
+
+    // 貸款類型：動態顯示對應金額欄位
+    document.querySelectorAll('input[name="loanType"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const val = this.value;
+            const houseEl = document.getElementById('houseLoanDetail');
+            const extraEl = document.getElementById('extraLoanDetail');
+            const houseInput = houseEl.querySelector('input');
+            const extraInput = extraEl.querySelector('input');
+
+            // 重置
+            houseEl.style.display = 'none';
+            extraEl.style.display = 'none';
+            houseInput.removeAttribute('required');
+            extraInput.removeAttribute('required');
+            houseInput.value = '';
+            extraInput.value = '';
+            houseEl.querySelectorAll('input[name="houseLoanYears"]').forEach(i => safeResetInput(i));
+            extraEl.querySelectorAll('input[name="extraLoanYears"]').forEach(i => safeResetInput(i));
+            const errorEl = document.getElementById('loanYearsError');
+            if (errorEl) errorEl.style.display = 'none';
+
+            if (val === '只有購屋貸款') {
+                houseEl.style.display = 'block';
+            } else if (val === '還有購屋貸款、也有增貸過') {
+                houseEl.style.display = 'block';
+                extraEl.style.display = 'block';
+            } else if (val === '沒有購屋貸款、但曾經有增貸') {
+                extraEl.style.display = 'block';
+            }
+            // 無任何貸款：兩個都隱藏
+        });
+    });
+
+    // 即時驗證：非購屋已繳款年期不可大於購屋已繳款年期
+    const loanYearsOrder = ['未滿3個月', '未滿半年', '已滿一年', '已滿二年', '三年以上', '五年以上'];
+
+    function validateLoanYears() {
+        const loanType = document.querySelector('input[name="loanType"]:checked')?.value;
+        const errorEl = document.getElementById('loanYearsError');
+        if (loanType !== '還有購屋貸款、也有增貸過') {
+            if (errorEl) errorEl.style.display = 'none';
+            return true;
+        }
+
+        const houseVal = document.querySelector('input[name="houseLoanYears"]:checked')?.value;
+        const extraVal = document.querySelector('input[name="extraLoanYears"]:checked')?.value;
+
+        if (!houseVal || !extraVal) {
+            if (errorEl) errorEl.style.display = 'none';
+            return true;
+        }
+
+        const houseIdx = loanYearsOrder.indexOf(houseVal);
+        const extraIdx = loanYearsOrder.indexOf(extraVal);
+
+        if (extraIdx > houseIdx) {
+            if (errorEl) errorEl.style.display = 'block';
+            return false;
+        } else {
+            if (errorEl) errorEl.style.display = 'none';
+            return true;
+        }
+    }
+
+    document.querySelectorAll('input[name="houseLoanYears"], input[name="extraLoanYears"]').forEach(radio => {
+        radio.addEventListener('change', validateLoanYears);
+    });
+
+    // ── 其他貸款：動態新增/移除卡片 ──
+    const otherLoanLabels = {
+        '購屋房貸(其他房屋)': '購屋房貸（其他房屋）',
+        '非購屋房貸增貸(其他房屋)': '非購屋房貸增貸（其他房屋）',
+        '車貸': '車貸',
+        '信貸': '信貸',
+        '學貸': '學貸',
+        '公司貸款': '公司貸款'
+    };
+    const container = document.getElementById('otherLoansContainer');
+    // 記錄每種類型的卡片計數
+    const loanCounters = {};
+
+    function createLoanCard(type) {
+        if (!loanCounters[type]) loanCounters[type] = 0;
+        loanCounters[type]++;
+        const idx = loanCounters[type];
+        const card = document.createElement('div');
+        card.className = 'loan-card';
+        card.dataset.type = type;
+        card.dataset.idx = idx;
+        card.innerHTML = `
+            <div class="loan-card-title">${otherLoanLabels[type]} 第 ${idx} 筆</div>
+            <button type="button" class="loan-card-remove" title="移除此筆">✕</button>
+            <label>餘額（萬元）：</label>
+            <input type="text" name="otherLoan_${type}_${idx}_balance" class="input-style" placeholder="例如：50 萬元">
+            <label>每月還款金額：</label>
+            <input type="text" name="otherLoan_${type}_${idx}_monthly" class="input-style" placeholder="例如：8,000 元">
+            <label>已繳款年期：</label>
+            <div class="radio-group years-scale">
+                <label class="radio-label"><input type="radio" name="otherLoan_${type}_${idx}_years" value="未滿3個月"> 未滿3個月</label>
+                <label class="radio-label"><input type="radio" name="otherLoan_${type}_${idx}_years" value="未滿半年"> 未滿半年</label>
+                <label class="radio-label"><input type="radio" name="otherLoan_${type}_${idx}_years" value="已滿一年"> 已滿一年</label>
+                <label class="radio-label"><input type="radio" name="otherLoan_${type}_${idx}_years" value="已滿二年"> 已滿二年</label>
+                <label class="radio-label"><input type="radio" name="otherLoan_${type}_${idx}_years" value="三年以上"> 三年以上</label>
+                <label class="radio-label"><input type="radio" name="otherLoan_${type}_${idx}_years" value="五年以上"> 五年以上</label>
+            </div>
+        `;
+        // 動態建立的 radio-label 選中樣式
+        card.querySelectorAll('.radio-label').forEach(label => {
+            label.addEventListener('click', function() {
+                const input = this.querySelector('input[type="radio"]');
+                if (!input) return;
+                const name = input.name;
+                card.querySelectorAll(`input[name="${name}"]`).forEach(inp => {
+                    const lbl = inp.closest('.radio-label');
+                    if (lbl) lbl.classList.remove('selected');
+                });
+                if (input.checked) this.classList.add('selected');
+            });
+        });
+        card.querySelector('.loan-card-remove').addEventListener('click', function() {
+            card.remove();
+            // 若該類型已無卡片，取消勾選
+            const remaining = container.querySelectorAll(`.loan-card[data-type="${type}"]`);
+            if (remaining.length === 0) {
+                const cb = document.querySelector(`input[name="otherLoanTypes"][value="${type}"]`);
+                if (cb) {
+                    cb.checked = false;
+                    cb.closest('.radio-label').classList.remove('selected');
+                    cb.closest('.radio-label').style.borderColor = 'var(--border-color)';
+                }
+                // 移除新增按鈕
+                const addBtn = container.querySelector(`.add-loan-btn[data-type="${type}"]`);
+                if (addBtn) addBtn.remove();
+            }
+            // 重新編號
+            renumberCards(type);
+            checkLoanCardCount();
+        });
+        return card;
+    }
+
+    function renumberCards(type) {
+        const cards = container.querySelectorAll(`.loan-card[data-type="${type}"]`);
+        cards.forEach((c, i) => {
+            c.querySelector('.loan-card-title').textContent = `${otherLoanLabels[type]} 第 ${i + 1} 筆`;
+        });
+    }
+
+    let loanCountWarningShown = false;
+    function checkLoanCardCount() {
+        const totalCards = container.querySelectorAll('.loan-card').length;
+        if (totalCards > 2 && !loanCountWarningShown) {
+            alert('您填寫的其他貸款筆數較多，建議直接聯繫專員說明，會更快獲得協助喔！');
+            loanCountWarningShown = true;
+        } else if (totalCards <= 2) {
+            loanCountWarningShown = false;
+        }
+    }
+
+    function addLoanCard(type) {
+        const card = createLoanCard(type);
+        // 插入在該類型的「新增」按鈕之前
+        const addBtn = container.querySelector(`.add-loan-btn[data-type="${type}"]`);
+        if (addBtn) {
+            container.insertBefore(card, addBtn);
+        } else {
+            container.appendChild(card);
+        }
+        checkLoanCardCount();
+    }
+
+    document.querySelectorAll('input[name="otherLoanTypes"]').forEach(cb => {
+        cb.addEventListener('change', function() {
+            const type = this.value;
+            if (this.checked) {
+                // 新增第一張卡
+                addLoanCard(type);
+                // 新增「再新增一筆」按鈕
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'add-loan-btn';
+                btn.dataset.type = type;
+                btn.textContent = `＋ 再新增一筆${otherLoanLabels[type]}`;
+                btn.addEventListener('click', () => addLoanCard(type));
+                container.appendChild(btn);
+            } else {
+                // 移除該類型所有卡片與按鈕
+                container.querySelectorAll(`.loan-card[data-type="${type}"]`).forEach(c => c.remove());
+                container.querySelectorAll(`.add-loan-btn[data-type="${type}"]`).forEach(b => b.remove());
+                loanCounters[type] = 0;
+            }
+        });
+    });
+
+    // 「其他（請輸入）」文字框顯示控制
+    // 單選：他人所有
+    document.querySelectorAll('input[name="ownerRelation"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const wrap = document.getElementById('ownerRelationOtherWrap');
+            const input = wrap.querySelector('input');
+            if (this.value === '其他(請輸入)') {
+                wrap.style.display = 'block';
+                input.setAttribute('required', 'required');
+            } else {
+                wrap.style.display = 'none';
+                input.removeAttribute('required');
+                input.value = '';
+            }
+            refreshOwnerJobSection();
+        });
+    });
+
+    // 複選：他人共同持有 / 本人與他人共有：所有關係人勾選都要更新清單
+    document.querySelectorAll('input[name="ownerRelationMultiReq"], input[name="ownerRelationMultiOpt"]').forEach(cb => {
+        cb.addEventListener('change', refreshOwnerJobSection);
+    });
+
+    // 「其他（請輸入）」文字輸入即時更新關係人清單
+    document.querySelectorAll('input[name="ownerRelationOther"], input[name="ownerRelationMultiReqOther"], input[name="ownerRelationMultiOptOther"]').forEach(input => {
+        input.addEventListener('input', refreshOwnerJobSection);
+    });
+
+    // 複選：他人共同持有
+    document.querySelector('input[name="ownerRelationMultiReq"][value="其他(請輸入)"]')?.addEventListener('change', function() {
+        const wrap = document.getElementById('ownerRelationMultiReqOtherWrap');
+        const input = wrap.querySelector('input');
+        if (this.checked) {
+            wrap.style.display = 'block';
+        } else {
+            wrap.style.display = 'none';
+            input.value = '';
+        }
+    });
+
+    // 複選：本人與他人共有
+    document.querySelector('input[name="ownerRelationMultiOpt"][value="其他(請輸入)"]')?.addEventListener('change', function() {
+        const wrap = document.getElementById('ownerRelationMultiOptOtherWrap');
+        const input = wrap.querySelector('input');
+        if (this.checked) {
+            wrap.style.display = 'block';
+        } else {
+            wrap.style.display = 'none';
+            input.value = '';
+        }
+    });
+
+    // 動態顯示額外欄位
+    function toggleConditional(id, show) {
+        const field = document.getElementById(id);
+        const input = field.querySelector('input');
+        if (show) {
+            field.style.display = 'block';
+            input.setAttribute('required', 'required');
+        } else {
+            field.style.display = 'none';
+            input.removeAttribute('required');
+            input.value = ''; 
+        }
+    }
+
+    // 導覽控制
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressBar = document.getElementById('progressBar');
+    const stepIndicator = document.getElementById('stepIndicator');
+
+    nextBtn.addEventListener('click', () => {
+        const currentFormStep = document.querySelector(`.form-step[data-step="${currentStep}"]`);
+        
+        // 驗證當前步驟必填欄位
+        const inputs = currentFormStep.querySelectorAll('input[required]');
+        let valid = true;
+        
+        // 針對 Radio 驗證
+        const checkedNames = new Set();
+        inputs.forEach(input => {
+            if (input.type === 'radio') {
+                checkedNames.add(input.name);
+            } else if (!input.value.trim()) {
+                valid = false;
+                input.style.borderColor = 'red';
+            } else {
+                input.style.borderColor = 'var(--border-color)';
+            }
+        });
+
+        checkedNames.forEach(name => {
+            const checked = currentFormStep.querySelector(`input[name="${name}"]:checked`);
+            if (!checked) {
+                valid = false;
+                currentFormStep.querySelectorAll(`input[name="${name}"]`).forEach(i => {
+                    i.closest('.radio-label').style.borderColor = 'red';
+                });
+            } else {
+                currentFormStep.querySelectorAll(`input[name="${name}"]`).forEach(i => {
+                    i.closest('.radio-label').style.borderColor = 'var(--border-color)';
+                });
+            }
+        });
+
+        if (!valid) {
+            alert('請完整填寫本頁的所有資訊喔！');
+            return;
+        }
+
+        // 額外驗證：產權子選項
+        if (currentStep === 1) {
+            const ownershipVal = currentFormStep.querySelector('input[name="ownership"]:checked')?.value;
+            if (ownershipVal === '他人所有') {
+                const checked = currentFormStep.querySelector('input[name="ownerRelation"]:checked');
+                if (!checked) {
+                    currentFormStep.querySelectorAll('input[name="ownerRelation"]').forEach(i => {
+                        i.closest('.radio-label').style.borderColor = 'red';
+                    });
+                    alert('請選擇產權人與您的關係！');
+                    return;
+                }
+            } else if (ownershipVal === '他人共同持有') {
+                const checked = currentFormStep.querySelectorAll('input[name="ownerRelationMultiReq"]:checked');
+                if (checked.length < 2) {
+                    currentFormStep.querySelectorAll('input[name="ownerRelationMultiReq"]').forEach(i => {
+                        i.closest('.radio-label').style.borderColor = 'red';
+                    });
+                    alert('「他人共同持有」請至少選擇兩位共同產權人與您的關係！');
+                    return;
+                }
+            }
+        }
+
+        // 額外驗證：貸款已繳款年期邏輯
+        if (currentStep === 3) {
+            if (!validateLoanYears()) {
+                alert('非購屋貸款已繳款年期不可大於購屋貸款已繳款年期，請重新選擇！');
+                return;
+            }
+        }
+
+        if (currentStep < totalSteps) {
+            currentFormStep.classList.remove('active');
+            currentStep++;
+            document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+            updateUI();
+        } else {
+            // 最後一步點擊，生成結果
+            generateSummary();
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (currentStep > 1) {
+            document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.remove('active');
+            currentStep--;
+            document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+            updateUI();
+        }
+    });
+
+    function updateUI() {
+        // 更新進度條
+        const percentage = (currentStep / totalSteps) * 100;
+        progressBar.style.width = `${percentage}%`;
+        stepIndicator.innerText = `步驟 ${currentStep} / ${totalSteps}`;
+
+        // 按鈕顯示邏輯
+        if (currentStep === 1) {
+            prevBtn.style.visibility = 'hidden';
+        } else {
+            prevBtn.style.visibility = 'visible';
+        }
+
+        if (currentStep === totalSteps) {
+            nextBtn.innerText = '送出並產生摘要';
+            nextBtn.style.backgroundColor = '#28a745';
+        } else {
+            nextBtn.innerText = '下一步';
+            nextBtn.style.backgroundColor = 'var(--primary-color)';
+        }
+    }
+
+    // 初始化進度條與步驟指示
+    updateUI();
+    refreshOwnerJobSection();
+
+    // 彙整文字摘要
+    function generateSummary() {
+        const form = document.getElementById('questionnaireForm');
+        const formData = new FormData(form);
+
+        // 金額格式正規化：避免 "500萬 萬元" 之類重複單位
+        function normalizeWan(str) {
+            if (!str) return '';
+            let s = str.trim().replace(/(萬元|萬)\s*$/, '').trim();
+            return s ? `${s} 萬元` : '';
+        }
+        function normalizeYuan(str) {
+            if (!str) return '';
+            let s = str.trim().replace(/元\s*$/, '').trim();
+            return s ? `${s} 元` : '';
+        }
+
+        const plan = formData.get('plan') || '未填寫';
+        const ownership = formData.get('ownership') || '未填寫';
+
+        // 產權關係彙整（處理「其他(請輸入)」替換為實際輸入值）
+        function resolveRelation(val, otherVal) {
+            return val === '其他(請輸入)' ? (otherVal || '其他') : val;
+        }
+
+        let ownerRelationText = '';
+        if (ownership === '他人所有') {
+            const rel = resolveRelation(formData.get('ownerRelation') || '', formData.get('ownerRelationOther') || '');
+            ownerRelationText = rel ? `（${rel}）` : '';
+        } else if (ownership === '他人共同持有') {
+            const vals = formData.getAll('ownerRelationMultiReq').map(v => resolveRelation(v, formData.get('ownerRelationMultiReqOther') || ''));
+            ownerRelationText = vals.length > 0 ? `（${vals.join('、')}）` : '';
+        } else if (ownership === '本人與他人共有') {
+            const vals = formData.getAll('ownerRelationMultiOpt').map(v => resolveRelation(v, formData.get('ownerRelationMultiOptOther') || ''));
+            ownerRelationText = vals.length > 0 ? `（${vals.join('、')}）` : '';
+        }
+        const buildType = formData.get('buildType') || '未填寫';
+        let buildTypeDisplay = buildType;
+        if (buildType === '其他') {
+            const sub = formData.get('buildTypeOther') || '';
+            const subText = formData.get('buildTypeOtherText') || '';
+            buildTypeDisplay = sub === '其他(請輸入)' ? `其他（${subText || '未填寫'}）` : (sub || '其他');
+        }
+        const usage = formData.get('usage') || '未填寫';
+
+        // 用途子項彙整
+        let usageDetail = '';
+        if (usage === '自住') {
+            const selfStatus = formData.get('selfLiveStatusSelf') || '';
+            const ownerStatus = formData.get('selfLiveStatusOwner') || '';
+            const selfStatusOtherOwner = formData.get('selfStatusWhenOtherOwner') || '';
+            usageDetail = selfStatus ? `\n　・本人持有：${selfStatus}` : '';
+            if (ownerStatus) usageDetail += `\n　・屋主持有：${ownerStatus}`;
+            if (selfStatusOtherOwner) usageDetail += `\n　・本人持有狀況：${selfStatusOtherOwner}`;
+        } else if (usage === '出租') {
+            const rentItems = formData.getAll('rentStatus');
+            const rentExpiry = formData.get('rentExpiry') || '未填寫';
+            const rentMonthly = formData.get('rentMonthly') || '未填寫';
+            usageDetail = rentItems.length ? `\n　・出租狀況：${rentItems.join('、')}` : '';
+            usageDetail += `\n　・租約到期：${rentExpiry}`;
+            usageDetail += `\n　・每月租金：${rentMonthly}`;
+        } else if (usage === '空屋/其他') {
+            const vacantItems = formData.getAll('vacantStatus');
+            const acquireDate = formData.get('acquireDate') || '';
+            usageDetail = vacantItems.length ? `\n　・空屋狀況：${vacantItems.join('、')}` : '';
+            if (acquireDate) usageDetail += `\n　・房屋取得日：${acquireDate}`;
+        }
+        // 其他貸款彙整
+        let otherLoansText = '';
+        let totalMonthly = 0;
+        const otherLoanTypes = ['購屋房貸(其他房屋)', '非購屋房貸增貸(其他房屋)', '車貸', '信貸', '學貸', '公司貸款'];
+        otherLoanTypes.forEach(type => {
+            const cards = document.querySelectorAll(`#otherLoansContainer .loan-card[data-type="${type}"]`);
+            cards.forEach((card, i) => {
+                const balance = card.querySelector(`input[name$="_balance"]`)?.value.trim() || '';
+                const monthly = card.querySelector(`input[name$="_monthly"]`)?.value.trim() || '';
+                const years   = card.querySelector(`input[name$="_years"]:checked`)?.value || '';
+                if (balance || monthly || years) {
+                    const parts = [];
+                    if (balance) parts.push(`餘額 ${normalizeWan(balance)}`);
+                    if (monthly) parts.push(`月付 ${normalizeYuan(monthly)}`);
+                    if (years)   parts.push(`已繳款年期 ${years}`);
+                    otherLoansText += `\n　・${otherLoanLabels[type]} 第${i+1}筆：${parts.join('、')}`;
+                    if (monthly) {
+                        const num = parseFloat(monthly.replace(/[^0-9.]/g, ''));
+                        if (!isNaN(num)) totalMonthly += num;
+                    }
+                }
+            });
+        });
+        let otherLoansSummary = '無';
+        if (otherLoansText) {
+            otherLoansSummary = `有（每月合計約 ${totalMonthly.toLocaleString()} 元）${otherLoansText}`;
+        }
+        const loanType = formData.get('loanType') || '未填寫';
+        const houseLoanBalance = formData.get('houseLoanBalance') || '';
+        const houseLoanYears = formData.get('houseLoanYears') || '';
+        const extraLoanBalance = formData.get('extraLoanBalance') || '';
+        const extraLoanYears = formData.get('extraLoanYears') || '';
+
+        // 貸款摘要文字
+        let loanDetail = loanType;
+        if (loanType === '只有購屋貸款') {
+            if (houseLoanBalance) loanDetail += `\n　・購屋貸款餘額：${normalizeWan(houseLoanBalance)}`;
+            if (houseLoanYears) loanDetail += `\n　・已繳款年期：${houseLoanYears}`;
+        } else if (loanType === '還有購屋貸款、也有增貸過') {
+            if (houseLoanBalance) loanDetail += `\n　・購屋貸款餘額：${normalizeWan(houseLoanBalance)}`;
+            if (houseLoanYears) loanDetail += `\n　・購屋貸款已繳款年期：${houseLoanYears}`;
+            if (extraLoanBalance) loanDetail += `\n　・非購屋貸款餘額：${normalizeWan(extraLoanBalance)}`;
+            if (extraLoanYears) loanDetail += `\n　・非購屋貸款已繳款年期：${extraLoanYears}`;
+        } else if (loanType === '沒有購屋貸款、但曾經有增貸') {
+            if (extraLoanBalance) loanDetail += `\n　・非購屋貸款餘額：${normalizeWan(extraLoanBalance)}`;
+            if (extraLoanYears) loanDetail += `\n　・已繳款年期：${extraLoanYears}`;
+        }
+        const jobType = formData.get('jobType') || '未填寫';
+        const annualIncomeRaw = formData.get('annualIncome') || '';
+        const annualIncome = annualIncomeRaw ? normalizeWan(annualIncomeRaw) : '未填寫';
+
+        // 職業補充資訊
+        let jobDetailText = '';
+        if (jobType === '上班族') {
+            const d = formData.get('jobDetailEmployee') || '';
+            if (d) jobDetailText = `\n　・現職公司/年資/職稱：${d}`;
+        } else if (jobType === '公司負責人(有營登)') {
+            const d = formData.get('jobDetailEmployee') || '';
+            if (d) jobDetailText = `\n　・現職公司/年資：${d}`;
+        } else if (jobType === '自己開公司/做生意(無營登)' || jobType === '自由業/其他') {
+            const d = formData.get('jobDetailSelfEmployed') || '';
+            if (d) jobDetailText = `\n　・對外營業店名/營業項目/月均收入：${d}`;
+        } else if (jobType === '家管/退休') {
+            const d = formData.get('jobDetailRetired') || '';
+            if (d) jobDetailText = `\n　・月均常態收入：${d}`;
+        }
+        const address = formData.get('address') || '未填寫';
+        const referrer = formData.get('referrer') || '無';
+        const age = formData.get('age') || '';
+        const ageText = age ? `\n--年齡：${age}` : '';
+
+        // 共同擔保品提供人提醒 + 屋主職收補充資料
+        const isNonSelfOwner = ownership && ownership !== '本人所有';
+        const ownerRelationList = getOwnerRelationList();
+        let coSignerNotice = '';
+        if (isNonSelfOwner && ownerRelationList.length > 0) {
+            coSignerNotice = `因提供之不動產非借款人本人所有，本人之${ownerRelationList.join('、')}亦需同意擔任本人借款擔保品提供人。`;
+        }
+
+        const ownerJobType = formData.get('ownerJobType') || '';
+        const ownerJobDetail = formData.get('ownerJobDetail') || '';
+        const ownerAge = formData.get('ownerAge') || '';
+        const ownerAnnualIncomeRaw = formData.get('ownerAnnualIncome') || '';
+        const ownerAnnualIncome = ownerAnnualIncomeRaw ? normalizeWan(ownerAnnualIncomeRaw) : '';
+
+        let ownerJobLines = [];
+        if (isNonSelfOwner) {
+            if (ownerJobType) ownerJobLines.push(`職業類型：${ownerJobType}`);
+            if (ownerJobDetail) ownerJobLines.push(`現職公司/年資/職稱：${ownerJobDetail}`);
+            if (ownerAge) ownerJobLines.push(`年齡：${ownerAge}`);
+            if (ownerAnnualIncome) ownerJobLines.push(`年收入估計：${ownerAnnualIncome}`);
+        }
+
+        // 額外區塊（提醒 + 屋主職收資料），附加在摘要最後
+        let ownerSectionText = '';
+        if (isNonSelfOwner && (coSignerNotice || ownerJobLines.length > 0)) {
+            ownerSectionText += `\n\n🔔【重要提醒】`;
+            if (coSignerNotice) ownerSectionText += `\n${coSignerNotice}`;
+            if (ownerJobLines.length > 0) {
+                ownerSectionText += `\n\n👤【屋主職收資料】`;
+                ownerJobLines.forEach(line => ownerSectionText += `\n　・${line}`);
+            }
+        }
+
+        // 組成要貼給專員看的排版文字
+        const textSummary = `📋【房貸理財規劃評估回覆】
+═══════════════════
+
+🏠【房屋資訊】
+--房屋產權：${ownership}${ownerRelationText}
+--建築型態：${buildTypeDisplay}
+--房屋用途：${usage}${usageDetail}
+--房屋地址：${address}
+
+💰【貸款狀況】
+--房屋貸款：${loanDetail}
+--其他貸款：${otherLoansSummary}
+
+💼【職業與收入】
+--職業類型：${jobType}${jobDetailText}
+--年收入估計：${annualIncome}${ageText}
+
+📮【聯絡資訊】
+--偏好規劃：${plan}
+--介紹人：${referrer}
+
+═══════════════════
+✨ 資料已填寫完成，請協助評估最合適的利率與年期方案，謝謝！${ownerSectionText}`;
+
+        // 隱藏前面表單元件
+        document.querySelectorAll('.form-step').forEach(step => step.classList.remove('active'));
+        document.getElementById('introBanner').style.display = 'none';
+        document.getElementById('progressContainer').style.display = 'none';
+        document.getElementById('btnContainer').style.display = 'none';
+
+        // 顯示結果
+        const resultStep = document.getElementById('resultStep');
+        resultStep.classList.add('active');
+        document.getElementById('resultSummary').innerText = textSummary;
+
+        // 紅色粗體提醒區塊：共同擔保品提供人提醒 + 屋主職收資料
+        const noticeBox = document.getElementById('ownerNoticeBox');
+        if (isNonSelfOwner && (coSignerNotice || ownerJobLines.length > 0)) {
+            document.getElementById('ownerNoticeText').textContent = coSignerNotice
+                ? `⚠️ ${coSignerNotice}`
+                : '';
+            const jobLinesHtml = ownerJobLines.length > 0
+                ? `【屋主職收資料】<br>${ownerJobLines.map(l => `・${l}`).join('<br>')}`
+                : '';
+            document.getElementById('ownerJobSummaryText').innerHTML = jobLinesHtml;
+            noticeBox.style.display = 'block';
+        } else {
+            noticeBox.style.display = 'none';
+        }
+    }
+
+    // 複製到剪貼簿
+    function copyToClipboard() {
+        const text = document.getElementById('resultSummary').innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }).catch(err => {
+            alert('複製失敗，請手動全選複製框內文字。');
+        });
+    }
+</script>
+
+</body>
+</html>
